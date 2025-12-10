@@ -83,12 +83,6 @@ The model demonstrates substantial learning capability, achieving precision scor
 
    **Note:** The root `requirements.txt` contains minimal dependencies needed to run `predict.py` for inference. If you plan to train or evaluate the model, use `Training/requirements.txt` instead, which includes additional dependencies like `pandas` for data processing.
 
-3. **Download the dataset:**
-
-   - You need to obtain the movie poster images dataset separately.
-   - The images should be organized in `cleaned_posters_local/` (preferred) or `Data/cleaned_posters/`.
-   - Each image should be named as `{poster_id}.jpg`.
-
 ## Using the Trained Model
 
 The pre-trained model (`genre_predictor_model_BCE.pth`) is ready to use for predicting genres from movie poster images.
@@ -189,7 +183,7 @@ python Training/train.py
 
 The training process follows these steps:
 
-1. **Data Loading:** The script loads movie poster images and their corresponding genre labels from `meta_processed.csv`. Images are resized to 224x224 pixels and normalized.
+1. **Data Loading:** The script loads movie poster images from local image folders (`cleaned_posters_local/` or `Data/cleaned_posters/`) and their corresponding genre labels from `meta_processed.csv`. Images are resized to 224x224 pixels and normalized.
 
 2. **Data Splitting:** The dataset is split into training (80%), validation (10%), and test (10%) sets.
 
@@ -208,6 +202,15 @@ The training process follows these steps:
 6. **Model Checkpointing:** The best model (based on validation loss) is saved as `genre_predictor_model_BCE.pth`, which includes model weights, MultiLabelBinarizer for label encoding, and training configuration.
 
 7. **Evaluation:** After training, the model can be evaluated using `Training/evaluate_model.py`, which tests multiple thresholds and calculates comprehensive metrics including Accuracy, Precision, Recall, and F1 Scores.
+
+### Download the Dataset
+
+To train the model, you need to obtain the movie poster images dataset:
+
+- You need to obtain the movie poster images dataset separately.
+- The images should be organized in `cleaned_posters_local/` (preferred) or `Data/cleaned_posters/`.
+- Each image should be named as `{poster_id}.jpg`.
+- The `meta_processed.csv` file should contain the corresponding genre labels for each poster ID.
 
 ## Data Processing Pipeline
 
