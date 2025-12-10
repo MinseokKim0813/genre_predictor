@@ -44,7 +44,7 @@ device = None
 # Configuration
 CONFIG = {
     'image_dirs': ['cleaned_posters_local', 'Data/cleaned_posters'],  # Check both directories
-    'csv_file': 'Training/meta_processed.csv',
+    'csv_file': 'meta_processed.csv',
     'image_size': (224, 224),
     'batch_size': 64,  # Bumped up from 32 to speed things up (lower this if you run out of memory)
     'num_epochs': 30,  # Maximum epochs - early stopping might finish sooner if things aren't improving
