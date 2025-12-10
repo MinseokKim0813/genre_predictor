@@ -261,15 +261,17 @@ The training process follows these steps:
 
 ## Data Processing Pipeline
 
-Based on our analysis of **300,000 movie posters**, we implemented a strict cleaning pipeline to ensure the model learns visual features rather than simply "reading" the movie title.
+To prepare the dataset for training, we implemented a strict cleaning pipeline based on our analysis of **300,000 movie posters**. This pipeline ensures the model learns visual features rather than simply "reading" the movie title. The following steps were applied to create the cleaned dataset:
 
 1.  **Dataset Filtration:** Removed invalid image links and corrupted files.
 
-2.  **Text Removal (OCR):** We utilized Optical Character Recognition (OCR) to identify title text and other metadata on the posters.
+2.  **Text Removal (OCR):** Utilized Optical Character Recognition (OCR) to identify title text and other metadata on the posters.
 
 3.  **In-painting:** Identified bounding boxes of text were filled with the surrounding background color to remove the text visual cues entirely.
 
 4.  **Final Dataset:** After processing, the dataset was consolidated to **90,000 high-quality images**.
+
+**Note:** The data processing scripts and the processed image dataset are not included in this repository. Users should prepare their own cleaned movie poster images following similar preprocessing steps if they wish to train the model.
 
 ## Model Architecture
 
@@ -296,23 +298,6 @@ To further improve the model's performance, specifically Recall, we have identif
 - **Regularization:** Tuning Dropout rates to mitigate overfitting.
 
 - **Handling Class Imbalance:** Utilizing weighted loss functions or oversampling for underrepresented genres.
-
-## Dataset Setup
-
-The project expects:
-
-1. **CSV File (`meta_processed.csv`):**
-
-   - Column 0: Poster ID (used as image filename)
-   - Column 3: Genre labels (as a Python list string, e.g., `"['Action', 'Drama']"`)
-
-2. **Image Directories:**
-
-   - Place poster images in either `Training/cleaned_posters_local/` or `Training/cleaned_posters/` directory.
-   - Images must be named as `{poster_id}.jpg` (e.g., `1.jpg`, `2.jpg`, etc.)
-   - Supported formats: JPG, JPEG, PNG
-
-**Note:** The script will automatically check both directories and use whichever contains the images.
 
 ### Evaluating the Model
 
