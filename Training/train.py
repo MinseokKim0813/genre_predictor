@@ -43,7 +43,7 @@ device = None
 
 # Configuration
 CONFIG = {
-    'image_dirs': ['cleaned_posters_local', 'Data/cleaned_posters'],  # Check both directories
+    'image_dirs': ['cleaned_posters_local', 'cleaned_posters'],  # Check both directories
     'csv_file': 'meta_processed.csv',
     'image_size': (224, 224),
     'batch_size': 64,  # Bumped up from 32 to speed things up (lower this if you run out of memory)

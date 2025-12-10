@@ -181,61 +181,56 @@ python Training/train.py
 
 ### Download the Dataset
 
-To train the model, you need to download and organize the movie poster images dataset. The dataset consists of **90,000 high-quality cleaned movie poster images** that have been processed to remove text (titles and metadata) using OCR and in-painting techniques.
+To train the model, you need to organize your movie poster images dataset. The model expects cleaned movie poster images that have been processed to remove text (titles and metadata) using OCR and in-painting techniques.
 
 #### Dataset Requirements
 
 1. **Movie Poster Images:**
 
-   - Download the cleaned poster images dataset
-   - The dataset should contain approximately **90,000 images**
+   - Expected format: Cleaned movie poster images (text removed)
    - Each image should be named as `{poster_id}.jpg` (e.g., `1.jpg`, `2.jpg`, `661.jpg`)
    - Supported image formats: JPG, JPEG, PNG
-
-2. **Directory Structure:**
-
-   - Place the images in one of the following directories:
-     - `cleaned_posters_local/` (preferred location)
-     - `Data/cleaned_posters/` (alternative location)
+   - Images should be placed in one of the following directories inside the `Training/` folder:
+     - `Training/cleaned_posters_local/` (preferred location)
+     - `Training/cleaned_posters/` (alternative location)
    - The training script will automatically check both directories and use whichever contains the images
 
-3. **Metadata File:**
-   - The `meta_processed.csv` file is already included in the `Training/` directory
+2. **Metadata File:**
+   - The `meta_processed.csv` file should be located in the `Training/` directory
    - This CSV file contains the genre labels for each poster ID
-   - Format:
-     - Column 0: Poster ID (used as image filename)
+   - Expected format:
+     - Column 0: Poster ID (used as image filename, e.g., `1`, `2`, `661`)
      - Column 3: Genre labels (as a Python list string, e.g., `"['Action', 'Drama']"`)
 
 #### Dataset Organization Example
 
 ```
 genre_predictor/
-├── cleaned_posters_local/     # Preferred location
-│   ├── 1.jpg
-│   ├── 2.jpg
-│   ├── 3.jpg
-│   └── ...
-├── Data/
-│   └── cleaned_posters/       # Alternative location
-│       ├── 1.jpg
-│       ├── 2.jpg
-│       └── ...
 └── Training/
-    └── meta_processed.csv     # Already included
+    ├── cleaned_posters_local/     # Preferred location
+    │   ├── 1.jpg
+    │   ├── 2.jpg
+    │   ├── 3.jpg
+    │   └── ...
+    ├── cleaned_posters/           # Alternative location
+    │   ├── 1.jpg
+    │   ├── 2.jpg
+    │   └── ...
+    └── meta_processed.csv
 ```
 
 #### Verification
 
-After downloading and organizing the dataset, verify the setup:
+After organizing your dataset, verify the setup:
 
 ```bash
 # Check if images are in the correct location
-ls cleaned_posters_local/ | head -10    # Should show image files
+ls Training/cleaned_posters_local/ | head -10    # Should show image files
 # or
-ls Data/cleaned_posters/ | head -10     # Alternative location
+ls Training/cleaned_posters/ | head -10          # Alternative location
 
 # Verify CSV file exists
-ls Training/meta_processed.csv          # Should exist
+ls Training/meta_processed.csv                   # Should exist
 ```
 
 **Note:** The training script will automatically detect which directory contains your images and report how many valid images it found during the data loading phase.
@@ -244,7 +239,7 @@ ls Training/meta_processed.csv          # Should exist
 
 The training process follows these steps:
 
-1. **Data Loading:** The script loads movie poster images from local image folders (`cleaned_posters_local/` or `Data/cleaned_posters/`) and their corresponding genre labels from `meta_processed.csv`. Images are resized to 224x224 pixels and normalized.
+1. **Data Loading:** The script loads movie poster images from local image folders (`cleaned_posters_local/` or `cleaned_posters/`) and their corresponding genre labels from `meta_processed.csv`. Images are resized to 224x224 pixels and normalized.
 
 2. **Data Splitting:** The dataset is split into training (80%), validation (10%), and test (10%) sets.
 
@@ -262,7 +257,7 @@ The training process follows these steps:
 
 6. **Model Checkpointing:** The best model (based on validation loss) is saved as `genre_predictor_model_BCE.pth`, which includes model weights, MultiLabelBinarizer for label encoding, and training configuration.
 
-7. **Evaluation:** After training, the model can be evaluated using `Training/evaluate_model.py`, which tests multiple thresholds and calculates comprehensive metrics including Accuracy, Precision, Recall, and F1 Scores.
+7. **Evaluation:** After training, the model can be evaluated using `evaluate_model.py`, which tests multiple thresholds and calculates comprehensive metrics including Accuracy, Precision, Recall, and F1 Scores.
 
 ## Data Processing Pipeline
 
@@ -313,7 +308,7 @@ The project expects:
 
 2. **Image Directories:**
 
-   - Place poster images in either `cleaned_posters_local/` or `Data/cleaned_posters/` directory.
+   - Place poster images in either `Training/cleaned_posters_local/` or `Training/cleaned_posters/` directory.
    - Images must be named as `{poster_id}.jpg` (e.g., `1.jpg`, `2.jpg`, etc.)
    - Supported formats: JPG, JPEG, PNG
 

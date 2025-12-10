@@ -516,7 +516,7 @@ def main():
                        help='Path to trained model file')
     parser.add_argument('--csv', type=str, default='Training/meta_processed.csv',
                        help='Path to CSV file with ground truth')
-    parser.add_argument('--image_dir', type=str, nargs='+', default=['cleaned_posters_local', 'Data/cleaned_posters'],
+    parser.add_argument('--image_dir', type=str, nargs='+', default=['Training/cleaned_posters_local', 'Training/cleaned_posters'],
                        help='Path(s) to directory(ies) containing images (can specify multiple)')
     parser.add_argument('--threshold', type=float, default=None,
                        help='Test single threshold value (default: None, will test multiple thresholds). '
