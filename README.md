@@ -6,6 +6,8 @@ A deep learning project that predicts movie genres from poster images using a Re
 
 This project trains a convolutional neural network to predict multiple movie genres from poster images. The model uses transfer learning with a pre-trained ResNet50 backbone and is trained using Binary Cross-Entropy loss for multi-label classification.
 
+> **Model Performance:** The model achieves **59.98% precision**, correctly predicting genres **59.98% of the time** across **28 different genre classes**. This performance is **15.8 times better** than a random baseline guess (which would achieve approximately 3.57% precision), demonstrating substantial learning capability and successful extraction of meaningful visual features from movie posters.
+
 ## Performance of the Model
 
 ### Threshold Optimization
@@ -37,6 +39,126 @@ The model demonstrates substantial learning capability, achieving precision scor
 - **Validation Loss:** 0.163
 - **Micro F1:** 0.4376
 - **Precision weighted (F0.5):** 55.40%
+
+## Using the Trained Model
+
+The pre-trained model (`genre_predictor_model_BCE.pth`) is ready to use for predicting genres from movie poster images.
+
+### Predicting Genres for New Images
+
+Use the `predict.py` script to predict genres for a single image or a batch of images:
+
+**Predict a single image:**
+
+```bash
+python predict.py --image path/to/poster.jpg
+```
+
+**Example execution:**
+
+```bash
+$ python predict.py --image ./Data/cleaned_posters/661.jpg
+Loading model...
+✓ Model loaded successfully
+  Number of genre classes: 28
+  Using threshold: 0.7
+  Using device: mps
+
+Predicting genres for: ./Data/cleaned_posters/661.jpg
+
+================================================================================
+PREDICTION RESULTS
+================================================================================
+
+[1] 661.jpg
+    Path: ./Data/cleaned_posters/661.jpg
+    Predicted Genres: Drama
+    Threshold: 0.7
+
+================================================================================
+```
+
+**Predict all images in a directory:**
+
+```bash
+python predict.py --directory path/to/posters/
+```
+
+**Use a custom threshold:**
+
+```bash
+python predict.py --image poster.jpg --threshold 0.3
+```
+
+**Save results to a file:**
+
+```bash
+# Save as JSON
+python predict.py --directory posters/ --output results.json
+
+# Save as CSV
+python predict.py --directory posters/ --output results.csv --format csv
+```
+
+**Show detailed probabilities:**
+
+```bash
+python predict.py --image poster.jpg --verbose
+```
+
+**Available options:**
+
+- `--image` / `-i`: Path to a single image file
+- `--directory` / `-d`: Path to directory containing images
+- `--model` / `-m`: Path to trained model file (default: `genre_predictor_model_BCE.pth`)
+- `--threshold` / `-t`: Threshold for genre prediction (default: **0.7**)
+- `--output` / `-o`: Output file path (JSON or CSV)
+- `--format` / `-f`: Output format when saving to file (`json` or `csv`, default: `json`)
+- `--verbose` / `-v`: Show detailed probabilities for each genre
+
+**Note:** By default, the prediction script uses a threshold of **0.7**, which provides the highest precision (60.00%) as shown in the performance metrics above. You can override this with the `--threshold` option if needed.
+
+## Training the Model
+
+Note that the best model is already trained and saved as `genre_predictor_model_BCE.pth`. However, if you want to train the model yourself:
+
+### Quick Start
+
+```bash
+python Training/train.py
+```
+
+### Training Configuration
+
+- Batch size: 64
+- Learning rate: 0.0015
+- Epochs: 30 (with early stopping)
+- Image size: 224x224
+- Train/Val/Test split: 80%/10%/10%
+
+### Training Process
+
+The training process follows these steps:
+
+1. **Data Loading:** The script loads movie poster images and their corresponding genre labels from `meta_processed.csv`. Images are resized to 224x224 pixels and normalized.
+
+2. **Data Splitting:** The dataset is split into training (80%), validation (10%), and test (10%) sets.
+
+3. **Model Initialization:** A ResNet50 backbone pre-trained on ImageNet is loaded. The first 10 layers (Conv1) are frozen to retain low-level feature extraction capabilities, while the rest of the network is fine-tuned.
+
+4. **Training Loop:** The model is trained using Binary Cross-Entropy loss for multi-label classification. Training includes:
+
+   - Forward pass through the network
+   - Loss calculation
+   - Backpropagation
+   - Parameter updates using Adam optimizer
+   - Validation after each epoch
+
+5. **Early Stopping:** Training stops early if validation loss doesn't improve for a specified number of epochs to prevent overfitting.
+
+6. **Model Checkpointing:** The best model (based on validation loss) is saved as `genre_predictor_model_BCE.pth`, which includes model weights, MultiLabelBinarizer for label encoding, and training configuration.
+
+7. **Evaluation:** After training, the model can be evaluated using `Training/evaluate_model.py`, which tests multiple thresholds and calculates comprehensive metrics including Accuracy, Precision, Recall, and F1 Scores.
 
 ## Data Processing Pipeline
 
@@ -142,26 +264,6 @@ The project expects:
 
 **Note:** The script will automatically check both directories and use whichever contains the images.
 
-## Usage
-
-### Training the Model
-
-Note that the best model is already trained and saved as `genre_predictor_model_BCE.pth`.
-
-To train from scratch:
-
-```bash
-python Training/train.py
-```
-
-**Training Configuration:**
-
-- Batch size: 64
-- Learning rate: 0.0015
-- Epochs: 30 (with early stopping)
-- Image size: 224x224
-- Train/Val/Test split: 80%/10%/10%
-
 ### Evaluating the Model
 
 **Evaluation (tests multiple thresholds):**
@@ -171,80 +273,6 @@ python Training/evaluate_model.py
 ```
 
 This script will run the evaluation metrics discussed in the "Performance of the Model" section, calculating Accuracy, Precision, Recall, and F1 Scores across the test set.
-
-### Predicting Genres for New Images
-
-Use the `predict.py` script to predict genres for a single image or a batch of images:
-
-**Predict a single image:**
-
-```bash
-python predict.py --image path/to/poster.jpg
-```
-
-**Example execution:**
-
-```bash
-$ python predict.py --image ./Data/cleaned_posters/661.jpg
-Loading model...
-✓ Model loaded successfully
-  Number of genre classes: 28
-  Using threshold: 0.7
-  Using device: mps
-
-Predicting genres for: ./Data/cleaned_posters/661.jpg
-
-================================================================================
-PREDICTION RESULTS
-================================================================================
-
-[1] 661.jpg
-    Path: ./Data/cleaned_posters/661.jpg
-    Predicted Genres: Drama
-    Threshold: 0.7
-
-================================================================================
-```
-
-**Predict all images in a directory:**
-
-```bash
-python predict.py --directory path/to/posters/
-```
-
-**Use a custom threshold:**
-
-```bash
-python predict.py --image poster.jpg --threshold 0.3
-```
-
-**Save results to a file:**
-
-```bash
-# Save as JSON
-python predict.py --directory posters/ --output results.json
-
-# Save as CSV
-python predict.py --directory posters/ --output results.csv --format csv
-```
-
-**Show detailed probabilities:**
-
-```bash
-python predict.py --image poster.jpg --verbose
-```
-
-**Available options:**
-
-- `--image` / `-i`: Path to a single image file
-- `--directory` / `-d`: Path to directory containing images
-- `--model` / `-m`: Path to trained model file (default: `genre_predictor_model_BCE.pth`)
-- `--threshold` / `-t`: Threshold for genre prediction (default: **0.7**)
-- `--output` / `-o`: Output file path (JSON or CSV)
-- `--format` / `-f`: Output format when saving to file (`json` or `csv`, default: `json`)
-- `--verbose` / `-v`: Show detailed probabilities for each genre
-
-**Note:** By default, the prediction script uses a threshold of **0.7**, which provides the highest precision (60.00%) as shown in the performance metrics above. You can override this with the `--threshold` option if needed.
 
 ## Output Files
 
