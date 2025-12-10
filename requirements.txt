@@ -1,0 +1,12 @@
+# Requirements for inference only (using the trained model)
+# Minimal dependencies needed to run predict.py
+# Note: predict.py imports from Training modules, so pandas is required due to imports in evaluate_model.py
+
+torch>=2.0.0
+torchvision>=0.15.0
+pillow>=9.0.0
+pandas>=1.5.0
+numpy>=1.23.0
+scikit-learn>=1.2.0
+tqdm>=4.65.0
+
