@@ -6,6 +6,8 @@ A deep learning project that predicts movie genres from poster images using a Re
 
 This project trains a convolutional neural network to predict multiple movie genres from poster images. The model uses transfer learning with a pre-trained ResNet50 backbone and is trained using Binary Cross-Entropy loss for multi-label classification.
 
+Unlike other movie genre predictor models, this model was trained exclusively on posters **without titles**. We removed all text from the movie posters using OCR and in-painting techniques, ensuring the model learns to identify genres based purely on visual features rather than relying on textual cues. This approach eliminates the bias that comes from reading movie titles and forces the model to extract meaningful visual patterns from the poster artwork itself.
+
 > **Model Performance:** The model achieves **59.98% precision**, correctly predicting genres **59.98% of the time** across **28 different genre classes**. This performance is **15.8 times better** than a random baseline guess (which would achieve approximately 3.57% precision), demonstrating substantial learning capability and successful extraction of meaningful visual features from movie posters.
 
 ## Performance of the Model
@@ -39,6 +41,53 @@ The model demonstrates substantial learning capability, achieving precision scor
 - **Validation Loss:** 0.163
 - **Micro F1:** 0.4376
 - **Precision weighted (F0.5):** 55.40%
+
+## Project Structure
+
+```
+.
+├── Training/
+│   ├── train.py                     # Training script
+│   ├── evaluate_model.py           # Evaluation script
+│   ├── meta_processed.csv          # Movie metadata CSV file
+│   └── requirements.txt            # Full dependencies for training/evaluation
+├── predict.py                       # Prediction script for new images
+├── genre_predictor_model_BCE.pth   # Trained model checkpoint
+├── requirements.txt                # Minimal dependencies for inference only
+└── README.md                       # This file
+```
+
+## Prerequisites
+
+- Python 3.7 or higher
+- CUDA-capable GPU (recommended for training) or CPU
+- Sufficient disk space for the dataset
+
+## Installation
+
+1. **Download this working directory**
+
+2. **Install Python dependencies:**
+
+   **For training/evaluation (full dependencies):**
+
+   ```bash
+   pip install -r Training/requirements.txt
+   ```
+
+   **For inference only (minimal dependencies):**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+   **Note:** The root `requirements.txt` contains minimal dependencies needed to run `predict.py` for inference. If you plan to train or evaluate the model, use `Training/requirements.txt` instead, which includes additional dependencies like `pandas` for data processing.
+
+3. **Download the dataset:**
+
+   - You need to obtain the movie poster images dataset separately.
+   - The images should be organized in `cleaned_posters_local/` (preferred) or `Data/cleaned_posters/`.
+   - Each image should be named as `{poster_id}.jpg`.
 
 ## Using the Trained Model
 
@@ -197,55 +246,6 @@ To further improve the model's performance, specifically Recall, we have identif
 - **Regularization:** Tuning Dropout rates to mitigate overfitting.
 
 - **Handling Class Imbalance:** Utilizing weighted loss functions or oversampling for underrepresented genres.
-
----
-
-## Project Structure
-
-```
-.
-├── Training/
-│   ├── train.py                     # Training script
-│   ├── evaluate_model.py           # Evaluation script
-│   ├── meta_processed.csv          # Movie metadata CSV file
-│   └── requirements.txt            # Full dependencies for training/evaluation
-├── predict.py                       # Prediction script for new images
-├── genre_predictor_model_BCE.pth   # Trained model checkpoint
-├── requirements.txt                # Minimal dependencies for inference only
-└── README.md                       # This file
-```
-
-## Prerequisites
-
-- Python 3.7 or higher
-- CUDA-capable GPU (recommended for training) or CPU
-- Sufficient disk space for the dataset
-
-## Installation
-
-1. **Download this working directory**
-
-2. **Install Python dependencies:**
-
-   **For training/evaluation (full dependencies):**
-
-   ```bash
-   pip install -r Training/requirements.txt
-   ```
-
-   **For inference only (minimal dependencies):**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-   **Note:** The root `requirements.txt` contains minimal dependencies needed to run `predict.py` for inference. If you plan to train or evaluate the model, use `Training/requirements.txt` instead, which includes additional dependencies like `pandas` for data processing.
-
-3. **Download the dataset:**
-
-   - You need to obtain the movie poster images dataset separately.
-   - The images should be organized in `cleaned_posters_local/` (preferred) or `Data/cleaned_posters/`.
-   - Each image should be named as `{poster_id}.jpg`.
 
 ## Dataset Setup
 
