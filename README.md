@@ -4,43 +4,27 @@ A deep learning project that predicts movie genres from poster images using a Re
 
 ## Overview
 
-This project trains a convolutional neural network to predict multiple movie genres from poster images. The model uses transfer learning with a pre-trained ResNet50 backbone and is trained using Binary Cross-Entropy loss for multi-label classification. The project explores various architectures, including custom CNNs and Transfer Learning, to optimize Precision and Recall.
+This project trains a convolutional neural network to predict multiple movie genres from poster images. The model uses transfer learning with a pre-trained ResNet50 backbone and is trained using Binary Cross-Entropy loss for multi-label classification.
 
 ## Data Processing Pipeline
 
-[cite_start]Based on our analysis of **300,000 movie posters**[cite: 6], we implemented a strict cleaning pipeline to ensure the model learns visual features rather than simply "reading" the movie title.
+Based on our analysis of **300,000 movie posters**, we implemented a strict cleaning pipeline to ensure the model learns visual features rather than simply "reading" the movie title.
 
 1.  **Dataset Filtration:** Removed invalid image links and corrupted files.
 
-2.  [cite_start]**Text Removal (OCR):** We utilized Optical Character Recognition (OCR) to identify title text and other metadata on the posters[cite: 8].
+2.  **Text Removal (OCR):** We utilized Optical Character Recognition (OCR) to identify title text and other metadata on the posters.
 
-3.  [cite_start]**In-painting:** Identified bounding boxes of text were filled with the surrounding background color to remove the text visual cues entirely[cite: 10].
+3.  **In-painting:** Identified bounding boxes of text were filled with the surrounding background color to remove the text visual cues entirely.
 
-4.  [cite_start]**Final Dataset:** After processing, the dataset was consolidated to **90,000 high-quality images**[cite: 12].
+4.  **Final Dataset:** After processing, the dataset was consolidated to **90,000 high-quality images**.
 
-## Model Evolution & Experiments
-
-We experimented with three distinct architectures to achieve optimal performance.
-
-### Model 1: Custom CNN (Baseline)
-
-- [cite_start]**Architecture:** 5 Convolutional Blocks (Conv + ReLU + MaxPool) followed by 2 Fully Connected layers[cite: 22].
-
-- [cite_start]**Filters:** scaled from 64 to 512 channels[cite: 36].
-
-- **Results:**
-
-  - [cite_start]High Precision (70.24%) but extremely low Recall (7.12%)[cite: 46].
-
-  - [cite_start]F1 Score: ~12.9%[cite: 46].
-
-  - _Conclusion:_ The model struggled to generalize and identify genres correctly, resulting in acceptable precision but poor coverage.
+## Model Architecture
 
 ### Model 2: ResNet50 (Transfer Learning)
 
-- [cite_start]**Backbone:** ResNet-50 (50 layers) pre-trained on ImageNet[cite: 55].
+- **Backbone:** ResNet-50 (50 layers) pre-trained on ImageNet.
 
-- [cite_start]**Configuration:** The first 10 layers (Conv1) were **frozen** to retain low-level feature extraction capabilities[cite: 57].
+- **Configuration:** The first 10 layers (Conv1) were **frozen** to retain low-level feature extraction capabilities.
 
 - **Classifier Head:**
 
@@ -48,7 +32,7 @@ We experimented with three distinct architectures to achieve optimal performance
 
   - FC2: 1024 $\rightarrow$ 512
 
-  - [cite_start]FC3: 512 $\rightarrow$ 27 (Output Classes) [cite: 73]
+  - FC3: 512 $\rightarrow$ 27 (Output Classes)
 
 - **Performance:**
 
@@ -56,7 +40,7 @@ We experimented with three distinct architectures to achieve optimal performance
 
   - Micro F1: 0.4376
 
-  - [cite_start]Precision weighted (F0.5): 55.40% [cite: 107]
+  - Precision weighted (F0.5): 55.40%
 
 #### Threshold Optimization
 
@@ -70,8 +54,6 @@ We tested multiple thresholds to balance Precision and Recall. The model perform
 
 **Note:** The model uses a **default threshold of 0.7** for predictions, which provides the highest precision (59.98%) and accuracy (17.91%) while maintaining good performance. This threshold can be adjusted when using the prediction script.
 
-[cite_start]_[cite: 110]_
-
 **Model Performance vs. Random Baseline:**
 
 The model predicts across **28 different genre classes**. For comparison, a random baseline that guesses genres uniformly would achieve approximately **3.57% precision** (1/28 ≈ 0.0357).
@@ -84,19 +66,11 @@ Our model significantly outperforms this baseline:
 
 The model demonstrates substantial learning capability, achieving precision scores that are over **16 times better** than random guessing, indicating successful extraction of meaningful visual features from movie posters for genre classification.
 
-### Model 3: Optimized CNN
-
-We attempted a third architecture to break the precision ceiling of 0.65 observed in previous attempts.
-
-- [cite_start]**Structure:** Deeper custom CNN with Dropout layers to prevent overfitting[cite: 120].
-
-- [cite_start]**Observations:** The model showed potential to reach 0.8 precision with extended training time, though ResNet50 remained the most robust for general application[cite: 148].
-
 ## Future Improvements
 
-[cite_start]To further improve the model's performance, specifically Recall, we have identified the following areas for development[cite: 167]:
+To further improve the model's performance, specifically Recall, we have identified the following areas for development:
 
-- [cite_start]**Advanced Data Augmentation:** Implementing random crops, rotation, and color jitter (brightness/contrast/saturation) to force the model to learn more complex features[cite: 172].
+- **Advanced Data Augmentation:** Implementing random crops, rotation, and color jitter (brightness/contrast/saturation) to force the model to learn more complex features.
 
 - **Regularization:** Tuning Dropout rates to mitigate overfitting.
 
@@ -196,7 +170,7 @@ python Training/train.py
 python Training/evaluate_model.py
 ```
 
-This script will run the evaluation metrics discussed in the "Model Evolution" section, calculating Accuracy, Precision, Recall, and F1 Scores across the test set.
+This script will run the evaluation metrics discussed in the "Model Architecture" section, calculating Accuracy, Precision, Recall, and F1 Scores across the test set.
 
 ### Predicting Genres for New Images
 
