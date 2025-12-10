@@ -6,6 +6,36 @@ A deep learning project that predicts movie genres from poster images using a Re
 
 This project trains a convolutional neural network to predict multiple movie genres from poster images. The model uses transfer learning with a pre-trained ResNet50 backbone and is trained using Binary Cross-Entropy loss for multi-label classification.
 
+## Performance of the Model
+
+- **Validation Loss:** 0.163
+- **Micro F1:** 0.4376
+- **Precision weighted (F0.5):** 55.40%
+
+### Threshold Optimization
+
+We tested multiple thresholds to balance Precision and Recall. The model performance varies significantly with different threshold values:
+
+| Threshold | Accuracy   | Precision  | Recall     | F1 (Micro) | F1 (Macro) | F0.5       |
+| :-------- | :--------- | :--------- | :--------- | :--------- | :--------- | :--------- |
+| 0.3       | 12.53%     | 51.06%     | 43.94%     | 0.4723     | 0.1010     | 0.4945     |
+| 0.5       | 17.69%     | 59.05%     | 33.43%     | 0.4269     | 0.0670     | 0.5120     |
+| **0.7**   | **17.91%** | **59.98%** | **30.12%** | **0.4010** | **0.0541** | **0.5005** |
+
+**Note:** The model uses a **default threshold of 0.7** for predictions, which provides the highest precision (59.98%) and accuracy (17.91%) while maintaining good performance. This threshold can be adjusted when using the prediction script.
+
+### Model Performance vs. Random Baseline
+
+The model predicts across **28 different genre classes**. For comparison, a random baseline that guesses genres uniformly would achieve approximately **3.57% precision** (1/28 ≈ 0.0357).
+
+Our model significantly outperforms this baseline:
+
+- **Threshold 0.3:** 51.06% precision → **13.3x better** than random (1,330% improvement)
+- **Threshold 0.5:** 59.05% precision → **15.5x better** than random (1,554% improvement)
+- **Threshold 0.7:** 59.98% precision → **15.8x better** than random (1,580% improvement)
+
+The model demonstrates substantial learning capability, achieving precision scores that are over **16 times better** than random guessing, indicating successful extraction of meaningful visual features from movie posters for genre classification.
+
 ## Data Processing Pipeline
 
 Based on our analysis of **300,000 movie posters**, we implemented a strict cleaning pipeline to ensure the model learns visual features rather than simply "reading" the movie title.
@@ -20,7 +50,7 @@ Based on our analysis of **300,000 movie posters**, we implemented a strict clea
 
 ## Model Architecture
 
-### Model 2: ResNet50 (Transfer Learning)
+### Model: ResNet50 (Transfer Learning)
 
 - **Backbone:** ResNet-50 (50 layers) pre-trained on ImageNet.
 
@@ -33,38 +63,6 @@ Based on our analysis of **300,000 movie posters**, we implemented a strict clea
   - FC2: 1024 $\rightarrow$ 512
 
   - FC3: 512 $\rightarrow$ 27 (Output Classes)
-
-- **Performance:**
-
-  - Validation Loss: 0.163
-
-  - Micro F1: 0.4376
-
-  - Precision weighted (F0.5): 55.40%
-
-#### Threshold Optimization
-
-We tested multiple thresholds to balance Precision and Recall. The model performance varies significantly with different threshold values:
-
-| Threshold | Accuracy   | Precision  | Recall     | F1 (Micro) | F1 (Macro) | F0.5       |
-| :-------- | :--------- | :--------- | :--------- | :--------- | :--------- | :--------- |
-| 0.3       | 12.53%     | 51.06%     | 43.94%     | 0.4723     | 0.1010     | 0.4945     |
-| 0.5       | 17.69%     | 59.05%     | 33.43%     | 0.4269     | 0.0670     | 0.5120     |
-| **0.7**   | **17.91%** | **59.98%** | **30.12%** | **0.4010** | **0.0541** | **0.5005** |
-
-**Note:** The model uses a **default threshold of 0.7** for predictions, which provides the highest precision (59.98%) and accuracy (17.91%) while maintaining good performance. This threshold can be adjusted when using the prediction script.
-
-**Model Performance vs. Random Baseline:**
-
-The model predicts across **28 different genre classes**. For comparison, a random baseline that guesses genres uniformly would achieve approximately **3.57% precision** (1/28 ≈ 0.0357).
-
-Our model significantly outperforms this baseline:
-
-- **Threshold 0.3:** 51.06% precision → **13.3x better** than random (1,330% improvement)
-- **Threshold 0.5:** 59.05% precision → **15.5x better** than random (1,554% improvement)
-- **Threshold 0.7:** 59.98% precision → **15.8x better** than random (1,580% improvement)
-
-The model demonstrates substantial learning capability, achieving precision scores that are over **16 times better** than random guessing, indicating successful extraction of meaningful visual features from movie posters for genre classification.
 
 ## Future Improvements
 
@@ -170,7 +168,7 @@ python Training/train.py
 python Training/evaluate_model.py
 ```
 
-This script will run the evaluation metrics discussed in the "Model Architecture" section, calculating Accuracy, Precision, Recall, and F1 Scores across the test set.
+This script will run the evaluation metrics discussed in the "Performance of the Model" section, calculating Accuracy, Precision, Recall, and F1 Scores across the test set.
 
 ### Predicting Genres for New Images
 
