@@ -8,10 +8,6 @@ This project trains a convolutional neural network to predict multiple movie gen
 
 ## Performance of the Model
 
-- **Validation Loss:** 0.163
-- **Micro F1:** 0.4376
-- **Precision weighted (F0.5):** 55.40%
-
 ### Threshold Optimization
 
 We tested multiple thresholds to balance Precision and Recall. The model performance varies significantly with different threshold values:
@@ -35,6 +31,12 @@ Our model significantly outperforms this baseline:
 - **Threshold 0.7:** 59.98% precision → **15.8x better** than random (1,580% improvement)
 
 The model demonstrates substantial learning capability, achieving precision scores that are over **16 times better** than random guessing, indicating successful extraction of meaningful visual features from movie posters for genre classification.
+
+### Key Metrics
+
+- **Validation Loss:** 0.163
+- **Micro F1:** 0.4376
+- **Precision weighted (F0.5):** 55.40%
 
 ## Data Processing Pipeline
 
